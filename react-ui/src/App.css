@@ -24,6 +24,7 @@
 }
 .sideBar {
   width:  15%;
+  min-width: 75px;
   height: 100%;
   background-color: #423535;
   border-right: 1px solid black;
