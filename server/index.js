@@ -18,7 +18,7 @@ const GithubStrategy = require('passport-github').Strategy;
 passport.use(new GithubStrategy({
     clientID: '1312e73bd47dae9f657b',
     clientSecret: '6df54171d5675e9b6178699c574f4bbb0f693faf',
-    callbackURL: 'http://127.0.0.1:5000/auth/github/callback'
+    callbackURL: 'https://blooming-waters-58260.herokuapp.com/auth/github/callback'
   },
   function(accessToken, refreshToken, profile, done) {
     return done(null, profile);
