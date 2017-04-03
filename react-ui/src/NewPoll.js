@@ -49,7 +49,7 @@ class NewPoll extends React.Component {
             return(
                 <div className='pollContainer'>
                     <div className='myPolls'>
-                        <h2>Please <a href='http://localhost:5000/auth/github'>login</a> to access this page.</h2>
+                        <h2>Please <a href='/auth/github'>login</a> to access this page.</h2>
                     </div>
                 </div>
             );

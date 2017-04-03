@@ -14,7 +14,7 @@ class Home extends React.Component {
     this.getPolls();
   }
   getPolls = () => {
-    axios.get('http://localhost:5000/api/displayPolls').then((res) => {
+    axios.get('/api/displayPolls').then((res) => {
       this.setState({
         polls: res.data
       });
