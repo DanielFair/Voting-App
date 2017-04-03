@@ -24,7 +24,7 @@ class Home extends React.Component {
   }
   render() {
     let pollList = this.state.polls.map((poll, i) => {
-      return <PollDisplay pollTitle={poll.title} pollOptions={poll.options} key={i}/>
+      return <PollDisplay pollId={poll._id} pollTitle={poll.title} pollOptions={poll.options} key={i}/>
     });
     return (
       <div className='pollContainer'>
@@ -37,7 +37,8 @@ class Home extends React.Component {
   }
 }
 const PollDisplay = (props) => {
-  let linkTo = '/polls/'+props.pollTitle;
+  // let linkTo = '/polls/'+props.pollTitle;
+  let linkTo = '/polls/'+props.pollId;
   return (
     <Link to={linkTo} style={{textDecoration: 'none'}}><div className='pollDisplay'>
       <h2>{props.pollTitle}</h2>

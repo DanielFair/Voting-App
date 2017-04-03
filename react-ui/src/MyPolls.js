@@ -3,7 +3,6 @@ import {Link} from 'react-router-dom';
 import axios from 'axios';
 
 class MyPolls extends React.Component{
-    // let myPolls = props.userPolls;dS 
     constructor(props){
         super(props);
         this.state = {
@@ -15,24 +14,39 @@ class MyPolls extends React.Component{
         this.getMyPolls();
     };
     getMyPolls = () => {
-        axios.get('/api/displaymypolls', {username: this.props.user}).then((res) => {
-            console.log(res);
-            this.setState({
-                loaded: true,
-                myPolls: res.data
-            })
+        if(this.props.user !== ''){
+            axios.post('/api/displaymypolls', {'username': this.props.user}).then((res) => {
+                this.setState({
+                    loaded: true,
+                    myPolls: res.data
+                })
+            }).catch((err) => {
+                if(err)console.log(err);
+            });
+        }
+    }
+    deletePoll = (title) => {
+        let deleteUrl = '/api/delete/'+title;
+        axios.delete(deleteUrl).then((res) => {
+            this.getMyPolls();
         }).catch((err) => {
-            if(err)console.log(err);
+            console.log(err);
         });
     }
     render() {
-        console.log('better yet lets check state: ', this.state.myPolls);
         let myPolls = this.state.myPolls.map((poll, i) => {
-            console.log(poll);
-            return <MyPollDisplay pollTitle={poll.title} pollOptions={poll.options} key={i}/>;
+            return (
+                <div key={i}>
+                    <MyPollDisplay 
+                        pollTitle={poll.title} 
+                        pollId={poll._id}
+                        pollOptions={poll.options} 
+                        handleDelete={this.deletePoll} />
+                    <button className='submitNewBtn' onClick={() => {this.deletePoll(poll.title)}}>Delete Poll</button>
+                </div>
+            );
         })
         if(this.props.loggedIn && this.state.loaded){
-            console.log('dwgh');
             return(
                 <div className='pollContainer'>
                     <div className='myPolls'>
@@ -52,7 +66,7 @@ class MyPolls extends React.Component{
     }
 }
 const MyPollDisplay = (props) => {
-  let linkTo = '/polls/'+props.pollTitle;
+  let linkTo = '/polls/'+props.pollId;
   return (
     <Link to={linkTo} style={{textDecoration: 'none'}}><div className='pollDisplay'>
       <h2>{props.pollTitle}</h2>

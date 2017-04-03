@@ -6,7 +6,8 @@ const Poll = require('./pollschema.js');
 const bodyParser = require('body-parser');
 const app = express();
 const PORT = process.env.PORT || 5000;
-const URL = 'mongodb://localhost:27017/votingapp';
+// const URL = 'mongodb://localhost:27017/votingapp';
+const URL = 'mongodb://admin:publicuser@ds147920.mlab.com:47920/votingapp';
 const passport = require('passport');
 const session = require('express-session');
 var userObj;
@@ -79,7 +80,9 @@ app.get('/api/displayPolls', (req, res) => {
 });
 
 app.get('/api/displaypoll/:title', (req, res) => {
-  Poll.findOne({title: req.params.title}, (err, result) => {
+  // console.log(req.params);
+  console.log(req.params.title);
+  Poll.findOne({_id: req.params.title}, (err, result) => {
     if(err) throw err;
     // console.log(result);
     res.send(result);
@@ -87,14 +90,26 @@ app.get('/api/displaypoll/:title', (req, res) => {
 });
 
 //Retrieve an array of the user's polls
-app.get('/api/displaymypolls', (req, res) => {
-  console.log(req.body.username);
+app.post('/api/displaymypolls', (req, res) => {
+  // console.log('req.body: ',req.body);
+  // console.log('req.body.username: ', req.body.username);
   Poll.find({author: req.body.username}, (err, polls) => {
     if(err) throw err;
     res.send(polls);
   });  
 });
 
+//Handle adding a custom voting option to a poll
+app.post('/api/addcustom', (req, res) => {
+  Poll.findOneAndUpdate(
+        {'title': req.body.title},
+        {$push: {'options': req.body.option}},
+        (err, poll) => {
+          if(err) throw err;
+          console.log('Updated poll with new option!');
+          res.send();
+      });
+})
 //Handle submitting a new poll
 app.post('/api/addnew', (req, res) => {
   // console.log(req.body.pollOptions);
@@ -119,28 +134,59 @@ app.post('/api/addnew', (req, res) => {
   })
 });
 
+//Handle deleting a poll
+app.delete('/api/delete/:title', (req, res) => {
+  console.log('deleting '+req.params.title);
+  Poll.findOneAndRemove(
+    {title: req.params.title}, (err, result) =>{
+      if(err) console.log(err);
+      console.log('deleted successfully');
+      console.log('result: ', result);
+      res.send();
+  });
+});
+
 //Handle voting
-app.post('/api/submitvote/:title', (req, res) => {
+app.post('/api/submitvote', (req, res) => {
+  let IP = req.connection.remoteAddress.split(':').pop();
   let targetOption = req.body.selectedOption;
-  // console.log(req.body.selectedOption);
   let key = 'votecounts.'+targetOption;
   let obj = {};
   obj[key] = 1;
-  Poll.findOneAndUpdate(
-    {'title': req.params.title},
-    {$inc: obj},
-    (err, poll) => {
-      if(err) throw err;
-      console.log('Updated votecount!');
-      res.send();
-      // let redirectUrl = '/polls/'+req.params.title;
-      // res.redirect(redirectUrl);
-    });
+  Poll.findOne({'title': req.body.title}, (err, poll) => {
+    if(err) throw err;
+    console.log('poll.voted: ',poll.voted);
+    // Check if this IP has voted already
+    let alreadyVoted = false;
+    poll.voted.forEach((voteIP) => {
+      if(voteIP == IP){
+        alreadyVoted = true;
+        // res.send('Already voted');
+      }
+    })
+    if(!alreadyVoted){
+      Poll.findOneAndUpdate(
+
+        {'title': req.body.title},
+        {$inc: obj,
+        $push: {'voted': IP}},
+        (err, poll) => {
+          if(err) throw err;
+          console.log('Updated votecount!');
+          res.send();
+          // let redirectUrl = '/polls/'+req.params.title;
+          // res.redirect(redirectUrl);
+      });
+    }
+    else{
+      res.send("Already voted");
+    }
+  });
 });
 //Passport login route
 app.get('/auth/github', passport.authenticate('github'));
 
-//Github callback route
+//Retrieve user obj
 app.get('/getuser', (req, res) => {
   if(userObj){
     res.send(userObj);
@@ -149,9 +195,10 @@ app.get('/getuser', (req, res) => {
     res.send('No user!');
   }
 });
+//Github callback route
 app.get('/auth/github/callback', passport.authenticate('github', { failureRedirect: 'http://localhost:3000/' }),
   (req, res) => {
-    console.log('hit callback route');
+    console.log('hit callback route for auth');
     // console.log(req.user);
     userObj = req.user;
     // res.redirect(req.session.backURL || '/')

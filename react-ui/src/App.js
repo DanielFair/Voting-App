@@ -2,7 +2,6 @@ import React from 'react';
 import './App.css';
 import { BrowserRouter as Router, Route, Link} from 'react-router-dom';
 import Home from './Home';
-import Login from './Login';
 import NewPoll from './NewPoll';
 import MyPolls from './MyPolls';
 import Poll from './Poll';
@@ -13,24 +12,24 @@ class App extends React.Component {
     super(props);
     this.state = {
       loggedIn: false,
-      user: {},
+      user: '',
       avatar: ''
     };
   }
   getUser = () => {
     axios.get('http://localhost:5000/getuser').then((res) => {
-      console.log(res.data);
       if(res.data._raw !== undefined && !this.state.loggedIn) {
+        console.log('avatar: '+JSON.stringify(res.data.photos[0].value));
         this.setState({
           loggedIn: true,
           user: res.data.username,
-          avatar: res.data.photos[0]
+          avatar: JSON.stringify(res.data.photos[0].value)
         });
       }
       else if(res.data === 'No user!' && this.state.loggedIn) {
         this.setState({
           loggedIn: false,
-          user: {}
+          user: ''
         });
       }
     }).catch((err) => {
@@ -41,27 +40,25 @@ class App extends React.Component {
     this.getUser();
   }
   render() {
-    console.log('State logged in?: ', this.state.loggedIn);
-    if(this.state.loggedIn){
-      console.log(this.state.user);
-    }
-    //das boot
+
     return(
       <Router>
         <div>
           <div>
             <TopBanner />
-            <SideBar loggedIn={this.state.loggedIn} updateData={this.getUser} user={this.state.user}/>
+            <SideBar 
+              loggedIn={this.state.loggedIn}
+              updateData={this.getUser} 
+              user={this.state.user} 
+              avatar={this.state.avatar} />
           </div>
 
           <Route exact={true} path='/' component={Home}/>
-          <Route path='/login' component={Login}/>
           <Route path='/newpoll' component={() => (<NewPoll loggedIn={this.state.loggedIn} user={this.state.user} />)}/>
-          <Route path='/polls/:title' component={Poll}/>
+          <Route path='/polls/:title' component={(props) => (<Poll loggedIn={this.state.loggedIn} location={props.match} user={this.state.user} />)}/>
           <Route path='/mypolls' component={() => (<MyPolls loggedIn={this.state.loggedIn} user={this.state.user} />)}/>
-
         </div>
-      </Router>
+      </Router>//das?
     );
   }
 }
@@ -77,7 +74,11 @@ function SideBar(props) {
 
   return (
     <div className='sideBar'>
-      <AccountControl loggedIn={props.loggedIn} updateData={props.updateData} user={props.user}/>
+      <AccountControl 
+        loggedIn={props.loggedIn} 
+        updateData={props.updateData} 
+        user={props.user} 
+        avatar={props.avatar}/>
       <Link to='/newpoll' style={{textDecoration: 'none'}}><div className='newPollBtn'>
         New Poll
       </div></Link>
@@ -88,20 +89,21 @@ function SideBar(props) {
   );
 }
 function AccountControl(props){
-    if(!props.loggedIn){
-      return(
-        <a href='http://localhost:5000/auth/github' style={{textDecoration: 'none'}}>
-        <div className='sideBarTop'><br/>Login<br/> <img src='Github-Mark-32px.png' alt='logingithub' style={{margin: '5px'}}/>
-        </div></a>
-      );
-    }
-    else{
-      return(
-        <a href='http://localhost:5000/logout' style={{textDecoration: 'none'}}>
-        <div className='sideBarTop'><br />Welcome {props.user.login}!<br/>Logout
-        </div></a>
-      );
-    }
+  if(!props.loggedIn){
+    return(
+      <a href='http://localhost:5000/auth/github' style={{textDecoration: 'none'}}>
+      <div className='sideBarTop'><br/>Login<br/> <img src='Github-Mark-32px.png' alt='logingithub' style={{margin: '5px'}}/>
+      </div></a>
+    );
+  }
+  else{
+    //<img src={props.avatar} alt='Avatar' />
+    return(
+      <a href='http://localhost:5000/logout' style={{textDecoration: 'none'}}>
+      <div className='sideBarTop'><br />Welcome {props.user}!<br/>Logout
+      </div></a>
+    );
+  }
 }
 
 export default App;
