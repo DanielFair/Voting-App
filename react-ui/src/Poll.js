@@ -23,7 +23,7 @@ class Poll extends React.Component {
         this.getData();
     }
     getData = () => {
-        if(this.props.user !== ''){
+        if(loadedData == false && this.props.user !== ''){
             let url = '/api/displaypoll/'+this.state.id;
             axios.get(url).then((res) => {
                 console.log('trigger');

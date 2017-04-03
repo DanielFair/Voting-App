@@ -6,8 +6,7 @@ const Poll = require('./pollschema.js');
 const bodyParser = require('body-parser');
 const app = express();
 const PORT = process.env.PORT || 5000;
-// const URL = 'mongodb://localhost:27017/votingapp';
-const URL = 'mongodb://admin:publicuser@ds147920.mlab.com:47920/votingapp';
+const URL = process.env.MONGODB_URL;
 const passport = require('passport');
 const session = require('express-session');
 var userObj;
@@ -16,8 +15,8 @@ var userObj;
 const GithubStrategy = require('passport-github').Strategy;
 
 passport.use(new GithubStrategy({
-    clientID: '1312e73bd47dae9f657b',
-    clientSecret: '6df54171d5675e9b6178699c574f4bbb0f693faf',
+    clientID: process.env.clientID,
+    clientSecret: process.env.clientSecret,
     callbackURL: 'https://blooming-waters-58260.herokuapp.com/auth/github/callback'
   },
   function(accessToken, refreshToken, profile, done) {
