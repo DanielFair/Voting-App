@@ -125,6 +125,9 @@ class Poll extends React.Component {
                                     value={this.state.customOption} 
                                     onChange={this.handleChange}
                                     addCustom={this.handleAddCustom} />;
+            let twitterText = 'Cast your vote for the poll "'+this.state.title+'" using the Voting App.';
+            let twitterBtn = 'https://twitter.com/intent/tweet?text='+twitterText;
+    
             return(
                 <div className='pollContainer'>
                     <div className='votePoll'>
@@ -139,6 +142,7 @@ class Poll extends React.Component {
                         </form>
                         <h3>Results: </h3>
                         <Doughnut data={chartData} />
+                        <a class='twitter-share-button' href={twitterBtn}>Share this poll</a>
                     </div>
                 </div>
             );

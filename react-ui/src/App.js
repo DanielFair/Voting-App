@@ -23,7 +23,7 @@ class App extends React.Component {
         this.setState({
           loggedIn: true,
           user: res.data.username,
-          avatar: JSON.stringify(res.data.photos[0].value)
+          avatar: res.data.photos[0].value;
         });
       }
       else if(res.data === 'No user!' && this.state.loggedIn) {
