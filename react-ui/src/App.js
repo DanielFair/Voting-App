@@ -6,7 +6,7 @@ import NewPoll from './NewPoll';
 import MyPolls from './MyPolls';
 import Poll from './Poll';
 import axios from 'axios';
-import gitlogo from 'gitlogo.png';
+import gitlogo from './gitlogo.png';
 
 class App extends React.Component {
   constructor(props) {
