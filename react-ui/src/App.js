@@ -20,10 +20,11 @@ class App extends React.Component {
   getUser = () => {
     axios.get('/getuser').then((res) => {
       if(res.data._raw !== undefined && !this.state.loggedIn) {
+        let avatarStr = JSON.stringify(res.data.photos[0].value).replace(/^"(.*)"$/, '$1');
         this.setState({
           loggedIn: true,
           user: res.data.username,
-          avatar: res.data.photos[0].value;
+          avatar: avatarStr
         });
       }
       else if(res.data === 'No user!' && this.state.loggedIn) {
