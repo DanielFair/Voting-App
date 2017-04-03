@@ -100,7 +100,7 @@ function AccountControl(props){
   else{
     return(
       <a href='/logout' style={{textDecoration: 'none'}}>
-      <div className='sideBarTop'><img src={props.avatar} alt='Avatar' /><br />Welcome {props.user}!<br/>Logout
+      <div className='sideBarTop'><img src={props.avatar} alt='Avatar' height='32' width='32'/><br />Welcome {props.user}!<br/>Logout
       </div></a>
     );
   }
