@@ -80,6 +80,10 @@ function SideBar(props) {
         updateData={props.updateData} 
         user={props.user} 
         avatar={props.avatar}/>
+      <WelcomeUser
+        loggedIn={props.loggedIn}
+        user={props.user}
+        avatar={props.avatar}/>
       <Link to='/newpoll' style={{textDecoration: 'none'}}><div className='newPollBtn'>
         New Poll
       </div></Link>
@@ -88,6 +92,18 @@ function SideBar(props) {
       </div></Link>
      </div>
   );
+}
+function WelcomeUser(props) {
+  if(props.loggedIn){
+    return (
+      <div className='welcomeUser'>
+        <img src={props.avatar} alt='Avatar' height='32' width='32'/><br />Welcome {props.user}!
+      </div>
+    )
+  }
+  else{
+    return null;
+  }
 }
 function AccountControl(props){
   if(!props.loggedIn){
@@ -100,7 +116,7 @@ function AccountControl(props){
   else{
     return(
       <a href='/logout' style={{textDecoration: 'none'}}>
-      <div className='sideBarTop'><img src={props.avatar} alt='Avatar' height='32' width='32'/><br />Welcome {props.user}!<br/>Logout
+      <div className='sideBarTop'><br/>Logout<br/><img src={gitlogo} alt='logoutgithub' style={{margin: '5px'}}/>
       </div></a>
     );
   }

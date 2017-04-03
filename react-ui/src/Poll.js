@@ -126,7 +126,7 @@ class Poll extends React.Component {
                                     onChange={this.handleChange}
                                     addCustom={this.handleAddCustom} />;
             let twitterText = 'Cast your vote for the poll "'+this.state.title+'" using the Voting App. https://blooming-waters-58260.herokuapp.com/polls/'+this.state.id;
-            // let tweetie = 'https://twitter.com/intent/tweet?text='+twitterText;
+            let twitterURL = 'https://twitter.com/intent/tweet?text='+twitterText;
             return(
                 <div className='pollContainer'>
                     <div className='votePoll'>
@@ -141,7 +141,7 @@ class Poll extends React.Component {
                         </form>
                         <h3>Results: </h3>
                         <Doughnut data={chartData} />
-                        <a href="https://twitter.com/share" class="twitter-share-button" data-text={twitterText} data-show-count="false">Share this Poll</a><script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+                        <a href={twitterURL}><button className='twitterBtn'>Share this Poll <i className='fa fa-twitter'></i></button></a>
                     </div>
                 </div>
             );

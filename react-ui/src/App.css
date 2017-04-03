@@ -168,6 +168,9 @@ span{
 }
 .displayUser {
   margin-top: 85px;
-  text-align: center;
-  
+  text-align: center; 
+}
+.twitterBtn {
+  background-color: #1a8bf0;
+  border-radius: 5px;  
 }
