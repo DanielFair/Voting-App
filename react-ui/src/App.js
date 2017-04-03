@@ -17,7 +17,7 @@ class App extends React.Component {
     };
   }
   getUser = () => {
-    axios.get('http://localhost:5000/getuser').then((res) => {
+    axios.get('/getuser').then((res) => {
       if(res.data._raw !== undefined && !this.state.loggedIn) {
         console.log('avatar: '+JSON.stringify(res.data.photos[0].value));
         this.setState({
@@ -91,7 +91,7 @@ function SideBar(props) {
 function AccountControl(props){
   if(!props.loggedIn){
     return(
-      <a href='http://localhost:5000/auth/github' style={{textDecoration: 'none'}}>
+      <a href='/auth/github' style={{textDecoration: 'none'}}>
       <div className='sideBarTop'><br/>Login<br/> <img src='Github-Mark-32px.png' alt='logingithub' style={{margin: '5px'}}/>
       </div></a>
     );
@@ -99,7 +99,7 @@ function AccountControl(props){
   else{
     //<img src={props.avatar} alt='Avatar' />
     return(
-      <a href='http://localhost:5000/logout' style={{textDecoration: 'none'}}>
+      <a href='/logout' style={{textDecoration: 'none'}}>
       <div className='sideBarTop'><br />Welcome {props.user}!<br/>Logout
       </div></a>
     );

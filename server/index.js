@@ -196,13 +196,13 @@ app.get('/getuser', (req, res) => {
   }
 });
 //Github callback route
-app.get('/auth/github/callback', passport.authenticate('github', { failureRedirect: 'http://localhost:3000/' }),
+app.get('/auth/github/callback', passport.authenticate('github', { failureRedirect: 'https://blooming-waters-58260.herokuapp.com' }),
   (req, res) => {
     console.log('hit callback route for auth');
     // console.log(req.user);
     userObj = req.user;
     // res.redirect(req.session.backURL || '/')
-    res.redirect('http://localhost:3000/');
+    res.redirect('https://blooming-waters-58260.herokuapp.com');
   }
 );
 //Handle passport logout route
@@ -210,7 +210,7 @@ app.get('/logout', (req, res) => {
   console.log('logging out!');
   req.logout();
   userObj = req.user;
-  res.redirect('http://localhost:3000/');
+  res.redirect('https://blooming-waters-58260.herokuapp.com');
 });
 // All remaining requests return the React app, so it can handle routing.
 app.get('*', (req, res) => {
