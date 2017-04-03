@@ -79,19 +79,15 @@ app.get('/api/displayPolls', (req, res) => {
 });
 
 app.get('/api/displaypoll/:title', (req, res) => {
-  // console.log(req.params);
   console.log(req.params.title);
   Poll.findOne({_id: req.params.title}, (err, result) => {
     if(err) throw err;
-    // console.log(result);
     res.send(result);
   });
 });
 
 //Retrieve an array of the user's polls
 app.post('/api/displaymypolls', (req, res) => {
-  // console.log('req.body: ',req.body);
-  // console.log('req.body.username: ', req.body.username);
   Poll.find({author: req.body.username}, (err, polls) => {
     if(err) throw err;
     res.send(polls);
@@ -111,14 +107,12 @@ app.post('/api/addcustom', (req, res) => {
 })
 //Handle submitting a new poll
 app.post('/api/addnew', (req, res) => {
-  // console.log(req.body.pollOptions);
   let optionsArr = req.body.pollOptions.split('\n');
   let voteCounts = {};
   optionsArr.forEach((option) => {
     console.log(option);
     voteCounts[option] = 0;
   });
-  // console.log('da: '+req.body.pollAuthor);
   let newPoll = new Poll({
     title: req.body.pollTitle,
     options: optionsArr,
@@ -129,18 +123,14 @@ app.post('/api/addnew', (req, res) => {
     if(err) throw err;
     console.log('New Poll saved successfully!');
     res.send();
-    // res.redirect('/');
   })
 });
 
 //Handle deleting a poll
 app.delete('/api/delete/:title', (req, res) => {
-  console.log('deleting '+req.params.title);
   Poll.findOneAndRemove(
     {title: req.params.title}, (err, result) =>{
       if(err) console.log(err);
-      console.log('deleted successfully');
-      console.log('result: ', result);
       res.send();
   });
 });
@@ -154,13 +144,11 @@ app.post('/api/submitvote', (req, res) => {
   obj[key] = 1;
   Poll.findOne({'title': req.body.title}, (err, poll) => {
     if(err) throw err;
-    console.log('poll.voted: ',poll.voted);
     // Check if this IP has voted already
     let alreadyVoted = false;
     poll.voted.forEach((voteIP) => {
       if(voteIP == IP){
         alreadyVoted = true;
-        // res.send('Already voted');
       }
     })
     if(!alreadyVoted){
@@ -173,8 +161,6 @@ app.post('/api/submitvote', (req, res) => {
           if(err) throw err;
           console.log('Updated votecount!');
           res.send();
-          // let redirectUrl = '/polls/'+req.params.title;
-          // res.redirect(redirectUrl);
       });
     }
     else{
@@ -197,16 +183,12 @@ app.get('/getuser', (req, res) => {
 //Github callback route
 app.get('/auth/github/callback', passport.authenticate('github', { failureRedirect: 'https://blooming-waters-58260.herokuapp.com' }),
   (req, res) => {
-    console.log('hit callback route for auth');
-    // console.log(req.user);
     userObj = req.user;
-    // res.redirect(req.session.backURL || '/')
     res.redirect('https://blooming-waters-58260.herokuapp.com');
   }
 );
 //Handle passport logout route
 app.get('/logout', (req, res) => {
-  console.log('logging out!');
   req.logout();
   userObj = req.user;
   res.redirect('https://blooming-waters-58260.herokuapp.com');
@@ -216,4 +198,3 @@ app.get('*', (req, res) => {
   res.sendFile(path.resolve(__dirname, '../react-ui/build', 'index.html'));
 });
 
-//Passport authentication for login

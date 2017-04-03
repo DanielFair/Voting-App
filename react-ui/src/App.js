@@ -6,6 +6,7 @@ import NewPoll from './NewPoll';
 import MyPolls from './MyPolls';
 import Poll from './Poll';
 import axios from 'axios';
+import gitlogo from 'gitlogo.png';
 
 class App extends React.Component {
   constructor(props) {
@@ -19,7 +20,6 @@ class App extends React.Component {
   getUser = () => {
     axios.get('/getuser').then((res) => {
       if(res.data._raw !== undefined && !this.state.loggedIn) {
-        console.log('avatar: '+JSON.stringify(res.data.photos[0].value));
         this.setState({
           loggedIn: true,
           user: res.data.username,
@@ -58,7 +58,7 @@ class App extends React.Component {
           <Route path='/polls/:title' component={(props) => (<Poll loggedIn={this.state.loggedIn} location={props.match} user={this.state.user} />)}/>
           <Route path='/mypolls' component={() => (<MyPolls loggedIn={this.state.loggedIn} user={this.state.user} />)}/>
         </div>
-      </Router>//das?
+      </Router>
     );
   }
 }
@@ -92,15 +92,14 @@ function AccountControl(props){
   if(!props.loggedIn){
     return(
       <a href='/auth/github' style={{textDecoration: 'none'}}>
-      <div className='sideBarTop'><br/>Login<br/> <img src='/public/Github-Mark-32px.png' alt='logingithub' style={{margin: '5px'}}/>
+      <div className='sideBarTop'><br/>Login<br/> <img src={gitlogo} alt='logingithub' style={{margin: '5px'}}/>
       </div></a>
     );
   }
   else{
-    //<img src={props.avatar} alt='Avatar' />
     return(
       <a href='/logout' style={{textDecoration: 'none'}}>
-      <div className='sideBarTop'><br />Welcome {props.user}!<br/>Logout
+      <div className='sideBarTop'><img src={props.avatar} alt='Avatar' /><br />Welcome {props.user}!<br/>Logout
       </div></a>
     );
   }
