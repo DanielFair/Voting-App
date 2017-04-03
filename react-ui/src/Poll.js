@@ -23,22 +23,22 @@ class Poll extends React.Component {
         this.getData();
     }
     getData = () => {
-        if(loadedData == false && this.props.user !== ''){
-            let url = '/api/displaypoll/'+this.state.id;
-            axios.get(url).then((res) => {
-                console.log('trigger');
-                this.setState({
-                    title: res.data.title,
-                    options: res.data.options,
-                    votecounts: res.data.votecounts,
-                    selectedOption: res.data.options[0],
-                    loadedData: true
-                });
-                
-            }).catch((err) => {
-                console.log(err);
+        // if(this.props.user !== ''){
+        let url = '/api/displaypoll/'+this.state.id;
+        axios.get(url).then((res) => {
+            console.log('trigger');
+            this.setState({
+                title: res.data.title,
+                options: res.data.options,
+                votecounts: res.data.votecounts,
+                selectedOption: res.data.options[0],
+                loadedData: true
             });
-        }
+            
+        }).catch((err) => {
+            console.log(err);
+        });
+        // }
     };
     handleChange = (e) => {
         let customState = false;
