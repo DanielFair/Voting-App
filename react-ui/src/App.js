@@ -92,7 +92,7 @@ function AccountControl(props){
   if(!props.loggedIn){
     return(
       <a href='/auth/github' style={{textDecoration: 'none'}}>
-      <div className='sideBarTop'><br/>Login<br/> <img src='Github-Mark-32px.png' alt='logingithub' style={{margin: '5px'}}/>
+      <div className='sideBarTop'><br/>Login<br/> <img src='/public/Github-Mark-32px.png' alt='logingithub' style={{margin: '5px'}}/>
       </div></a>
     );
   }
