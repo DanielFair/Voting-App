@@ -20,7 +20,6 @@ class NewPoll extends React.Component {
     }
     handleSubmit = (e) => {
         e.preventDefault();
-        console.log('Submitted ', this.state.pollTitle+', '+this.state.pollOptions);
         axios.post('/api/addnew', {
 
             pollTitle: this.state.pollTitle,
@@ -28,7 +27,6 @@ class NewPoll extends React.Component {
             pollAuthor: this.props.user
         }).then((res) => {
             //setting state to true will trigger redirecting SPA to home
-            console.log('redirecting!');
             this.setState({
                 added: true
             });
@@ -37,9 +35,6 @@ class NewPoll extends React.Component {
         });
     }
     render(){
-        console.log(this.props.user);
-        // console.log('now login: ', this.props.user["login"]);
-        // console.log('props: ', this.props.loggedIn);
         if(this.state.added){
             return(
                 <Redirect to='/' />

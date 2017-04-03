@@ -3,7 +3,6 @@ import axios from 'axios';
 import Chart from 'chart.js';
 Chart.defaults.global.defaultFontColor = "white";
 import {Doughnut} from 'react-chartjs-2';
-// import { defaults } from 'react-chartjs-2';
 
 class Poll extends React.Component {
     constructor(props) {
@@ -23,10 +22,8 @@ class Poll extends React.Component {
         this.getData();
     }
     getData = () => {
-        // if(this.props.user !== ''){
         let url = '/api/displaypoll/'+this.state.id;
         axios.get(url).then((res) => {
-            console.log('trigger');
             this.setState({
                 title: res.data.title,
                 options: res.data.options,
@@ -38,7 +35,6 @@ class Poll extends React.Component {
         }).catch((err) => {
             console.log(err);
         });
-        // }
     };
     handleChange = (e) => {
         let customState = false;
